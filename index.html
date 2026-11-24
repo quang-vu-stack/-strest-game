@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173332" />
+    <title>Hiên Mưa</title>
+  </head>
+  <body>
+    <main id="game" aria-label="Vườn Hiên Mưa">
+      <div id="view" aria-hidden="true"></div>
+      <header class="top">
+        <div class="brand">
+          <h1>Hiên Mưa</h1>
+          <p>Một khoảng lặng trong vườn</p>
+        </div>
+        <div class="settings" aria-label="Cài đặt khu vườn">
+          <button id="rain" type="button" aria-pressed="true">Mưa</button>
+          <button id="audio" type="button" aria-pressed="false" hidden>Tiếng mưa</button>
+          <button id="motion" type="button" aria-pressed="false">Ít chuyển động</button>
+        </div>
+      </header>
+      <aside class="guide">
+        <p class="location">VƯỜN BÊN HỒ</p>
+        <p id="tip" role="status">Đi đến gần một chậu cây để tưới.</p>
+        <p class="keys"><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> hoặc phím mũi tên · <kbd>E</kbd> để tưới</p>
+        <p class="touch-tip">Chạm xuống đất để đi.</p>
+      </aside>
+      <button id="water" type="button" hidden>Tưới cây</button>
+      <p id="error" role="alert" hidden>Thiết bị chưa mở được cảnh 3D. Hãy thử mở game bằng Chrome hoặc Edge với WebGL được bật.</p>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
