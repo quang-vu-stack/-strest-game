@@ -17,16 +17,18 @@
         <div class="settings" aria-label="Cài đặt khu vườn">
           <button id="rain" type="button" aria-pressed="true">Mưa</button>
           <button id="audio" type="button" aria-pressed="false" hidden>Tiếng mưa</button>
+          <button id="dusk" type="button" aria-pressed="false">Chạng vạng</button>
           <button id="motion" type="button" aria-pressed="false">Ít chuyển động</button>
         </div>
       </header>
       <aside class="guide">
         <p class="location">VƯỜN BÊN HỒ</p>
-        <p id="tip" role="status">Đi đến gần một chậu cây để tưới.</p>
-        <p class="keys"><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> hoặc phím mũi tên · <kbd>E</kbd> để tưới</p>
+        <p id="tip" role="status">Tưới hoa dọc đường hoặc ngồi nghỉ bên hồ.</p>
+        <p class="keys"><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> hoặc phím mũi tên · <kbd>E</kbd> để tương tác</p>
         <p class="touch-tip">Chạm xuống đất để đi.</p>
       </aside>
-      <button id="water" type="button" hidden>Tưới cây</button>
+      <button class="action" id="water" type="button" hidden>Tưới cây</button>
+      <button class="action" id="seat" type="button" hidden>Ngồi nghỉ</button>
       <p id="error" role="alert" hidden>Thiết bị chưa mở được cảnh 3D. Hãy thử mở game bằng Chrome hoặc Edge với WebGL được bật.</p>
     </main>
     <script type="module" src="/src/main.js"></script>
