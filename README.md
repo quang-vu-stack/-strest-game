@@ -15,9 +15,9 @@ Mở địa chỉ Vite in ra. Kiểm tra bản build với `npm run build` và x
 
 ## Điều khiển
 
-- **WASD hoặc phím mũi tên** để đi, **E** hoặc **Tưới cây** khi gần chậu.
+- **WASD hoặc phím mũi tên** để đi. Bấm **E** hoặc **Tưới cây** khi gần chậu. Gần ghế, bấm **E** hoặc **Ngồi nghỉ** để ngắm hồ. Bấm **E** hoặc **Đứng dậy** để đi tiếp.
 - **Chạm hoặc bấm xuống đất** để đi theo đoạn thẳng ngắn. Khi gặp hồ hoặc nhà, chọn một điểm trung gian.
-- Nút **Mưa** bật/tắt mưa và ô. **Ít chuyển động** ẩn mưa rơi, gợn nước và cho hoa hiện ngay. Game dùng thiết lập giảm chuyển động của thiết bị lúc mở.
+- **Mưa** bật/tắt mưa và ô. **Tiếng mưa** bật/tắt âm thanh. **Chạng vạng** đổi ánh sáng và bật đèn dọc lối đi. **Ít chuyển động** ẩn mưa rơi, gợn nước, bỏ hiệu ứng chuyển cảnh và cho hoa hiện ngay.
 
 ## Phân công
 
@@ -26,4 +26,4 @@ Mở địa chỉ Vite in ra. Kiểm tra bản build với `npm run build` và x
 | Codex | Cảnh 3D, điều khiển, tưới hoa, giao diện và kiểm tra tích hợp |
 | Gemini | Âm thanh nền trong `src/ambient-audio.js`. [Yêu cầu và tiêu chí bàn giao](https://github.com/quang-vu-stack/-strest-game/issues/1) |
 
-Bản 0.1 tập trung vào dạo vườn và tưới hoa. Tiếng mưa đang chờ phần bàn giao của Gemini.
+Bản v0.2 thêm ghế nghỉ ven hồ và khung cảnh chạng vạng. Âm thanh do Gemini phát triển.

@@ -20,11 +20,13 @@ function mesh(parent, shape, color, position, scale) {
 
 export const pond = { left: 2.4, right: 12, back: -8, front: -2.3 };
 export const bridge = { left: 6.4, right: 8.2 };
+export const bench = { x: 4.7, z: -0.77, seatHeight: 0.48 };
 export const playerBounds = { left: -13.8, right: 13.8, back: -9.8, front: 9.8 };
 
 export function canWalk(x, z) {
   if (x < playerBounds.left || x > playerBounds.right || z < playerBounds.back || z > playerBounds.front) return false;
   if (x > -11.2 && x < -5.9 && z > -7.4 && z < -3.5) return false;
+  if (Math.abs(x - bench.x) < 1.32 && Math.abs(z - bench.z) < 0.43) return false;
   const withinPond = x > pond.left && x < pond.right && z > pond.back && z < pond.front;
   return !withinPond || (x > bridge.left && x < bridge.right);
 }
@@ -90,6 +92,59 @@ function makePlanter(scene, x, z) {
   return { x, z, flower, watered: 0 };
 }
 
+function makeBench(scene) {
+  const seat = new THREE.Group();
+  seat.position.set(bench.x, 0, bench.z);
+  scene.add(seat);
+  for (const x of [-1.05, 1.05]) {
+    mesh(seat, terrain, 0x534a42, [x, 0.23, 0], [0.16, 0.46, 0.67]);
+    mesh(seat, terrain, 0x534a42, [x, 0.71, 0.31], [0.11, 0.54, 0.1]);
+    mesh(seat, terrain, 0x986f51, [x, 0.67, 0], [0.12, 0.09, 0.65]);
+  }
+  for (const z of [-0.24, 0, 0.24]) {
+    mesh(seat, terrain, 0xb58761, [0, 0.43, z], [2.47, 0.1, 0.21]);
+  }
+  for (const y of [0.66, 0.87]) {
+    mesh(seat, terrain, 0xa77553, [0, y, 0.35], [2.38, 0.14, 0.095]);
+  }
+}
+
+function makeLanterns(scene) {
+  const glass = new THREE.MeshStandardMaterial({
+    color: 0xd6a477, emissive: 0xffa34b, emissiveIntensity: 0.04, roughness: 0.4,
+  });
+  const glowSize = 32;
+  const pixels = new Uint8Array(glowSize * glowSize * 4);
+  for (let y = 0; y < glowSize; y++) {
+    for (let x = 0; x < glowSize; x++) {
+      const index = (y * glowSize + x) * 4;
+      const radius = Math.hypot(x - 15.5, y - 15.5) / 15.5;
+      pixels.set([255, 255, 255, Math.round(255 * Math.max(0, 1 - radius) ** 2)], index);
+    }
+  }
+  const texture = new THREE.DataTexture(pixels, glowSize, glowSize);
+  texture.magFilter = THREE.LinearFilter;
+  texture.needsUpdate = true;
+  const poolMaterial = new THREE.MeshBasicMaterial({
+    map: texture, color: 0xffb457, transparent: true, depthWrite: false, opacity: 0,
+  });
+  const poolGeometry = new THREE.PlaneGeometry(3.2, 3.2);
+  for (const [x, z] of [[-8.6, 3.1], [-2.2, 0.47], [3.4, 3.16], [5.9, -1.25], [8.72, -1.28], [11.2, 3.05]]) {
+    mesh(scene, cylinder, 0x50483b, [x, 0.39, z], [0.068, 0.78, 0.068]);
+    mesh(scene, terrain, 0x50483b, [x, 0.77, z], [0.35, 0.09, 0.35]);
+    const shade = new THREE.Mesh(terrain, glass);
+    shade.position.set(x, 0.96, z);
+    shade.scale.set(0.27, 0.3, 0.27);
+    scene.add(shade);
+    mesh(scene, cone, 0x57473b, [x, 1.15, z], [0.25, 0.17, 0.25]);
+    const pool = new THREE.Mesh(poolGeometry, poolMaterial);
+    pool.rotation.x = -Math.PI / 2;
+    pool.position.set(x, 0.038, z);
+    scene.add(pool);
+  }
+  return { glass, poolMaterial };
+}
+
 export function makeWorld(scene) {
   const ground = new THREE.Group();
   scene.add(ground);
@@ -112,6 +167,8 @@ export function makeWorld(scene) {
     for (const z of [-8.42, -6.2, -4.1, -1.84]) mesh(scene, terrain, 0x70533d, [x, 0.38, z], [0.11, 0.77, 0.13]);
   }
   teaHouse(scene);
+  makeBench(scene);
+  const lanterns = makeLanterns(scene);
   const trees = [
     [-13, -8, 1.72], [-11.6, -9.5, 1.83], [-9.5, -9.55, 1.25], [-6.6, -9.4, 1.56],
     [-4.5, -8.1, 1.72], [-1.7, -9.2, 2.03], [1, -9.15, 1.33], [4.65, -9.6, 1.31],
@@ -150,7 +207,7 @@ export function makeWorld(scene) {
     ripples.push(ring);
   }
   const planters = [[-3.9, 2.9], [1.5, 0.62], [4.6, 4.25], [-5.5, -2.9], [10.3, 0.65]].map(([x, z]) => makePlanter(scene, x, z));
-  return { ground, planters, ripples };
+  return { ground, planters, ripples, lanterns };
 }
 
 export function makePlayer(scene) {
@@ -159,8 +216,9 @@ export function makePlayer(scene) {
   mesh(player, rounded, 0x355f58, [0, 0.43, 0], [0.32, 0.39, 0.25]);
   mesh(player, rounded, 0xf5c094, [0, 0.84, 0], [0.24, 0.25, 0.22]);
   mesh(player, rounded, 0x473f35, [0, 0.99, -0.033], [0.25, 0.15, 0.23]);
+  const feet = [];
   for (const x of [-0.145, 0.145]) {
-    mesh(player, rounded, 0x514637, [x, 0.11, 0.025], [0.12, 0.11, 0.17]);
+    feet.push(mesh(player, rounded, 0x514637, [x, 0.11, 0.025], [0.12, 0.11, 0.17]));
     mesh(player, rounded, 0x403b31, [x * 0.7, 0.85, 0.198], [0.026, 0.025, 0.026]);
   }
   const umbrella = new THREE.Group();
@@ -170,5 +228,11 @@ export function makePlayer(scene) {
   const cover = mesh(umbrella, canopy, 0xe8b76b, [0.2, 1.45, 0.06], [0.64, 0.28, 0.64]);
   cover.material.side = THREE.DoubleSide;
   mesh(umbrella, rounded, 0x986a49, [0.2, 1.73, 0.06], [0.062, 0.056, 0.062]);
-  return { player, umbrella };
+  function poseSeated(seated) {
+    for (const foot of feet) {
+      foot.position.y = seated ? -0.31 : 0.11;
+      foot.position.z = seated ? 0.29 : 0.025;
+    }
+  }
+  return { player, umbrella, poseSeated };
 }
